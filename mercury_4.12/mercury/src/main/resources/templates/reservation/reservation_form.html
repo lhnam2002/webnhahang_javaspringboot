@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Bàn</title>
+    <!-- Link đến Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+          rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet"/>
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* CSS tùy chỉnh để hiển thị hình ảnh và nút đẹp hơn */
+        .table-button, .menu-button {
+            display: inline-block;
+            margin: 15px;
+            padding: 10px;
+            border: none;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .table-button img, .menu-button img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .table-button:hover, .menu-button:hover {
+            background-color: #e9ecef;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .table-button span, .menu-button span {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        .review-stars {
+            color: #f1c40f;
+            font-size: 18px;
+            display: flex;
+            gap: 4px;
+        }
+.select-button {
+            margin-top: 10px;
+        }
+
+        /* Style for Toast message */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 200px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .best-seller-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .toast {
+        z-index: 1050 !important;
+}
+
+        .custom-col {
+    flex: 0 0 20%; /* 20% width for each column */
+    max-width: 20%;
+}
+    </style>
+</head>
+
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container my-4">
+    <div class="container">
+        <h1 class="text-center my-4">Đặt Bàn</h1>
+        <div>
+            <div class="mb-3">
+                <label for="reservationTime" class="form-label">Thời gian đặt bàn:</label>
+                <input type="datetime-local" id="reservationTime" name="reservationTime" class="form-control" required>
+
+            </div>
+
+            <div class="mb-3">
+                <label for="numberOfPeople" class="form-label">Số người:</label>
+                <input value="1" type="number" id="numberOfPeople" name="numberOfPeople" class="form-control" min="1"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label for="specialRequest" class="form-label">Yêu cầu đặc biệt:</label>
+                <textarea id="specialRequest" name="specialRequest" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" id="preOrderFood" name="preOrderFood" class="form-check-input">
+                <label for="preOrderFood" class="form-check-label">Đặt món trước</label>
+            </div>
+
+            <!-- Hiển thị danh sách bàn dưới dạng các button -->
+            <div class="mb-4">
+                <label for="selectedTableId" class="form-label">Chọn bàn:</label>
+                <div class="row" id="tableList">
+                    <div th:each="table : ${diningTables}" class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/tables/image/{id}(id=${table.id})}" class="card-img-top" alt="Table Image">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Bàn số: <span th:text="${table.tableNumber}"></span></h5>
+                                <p class="card-text">Sức chứa: <span th:text="${table.capacity}"></span> người</p>
+                                <p class="card-text">Vị trí: <span th:text="${table.locationDescription}"></span></p>
+                                <button type="button" class="btn btn-primary select-button"
+                                        th:data-id="${table.id}"
+                                        th:data-image="${table.imageData}"
+                                        th:data-desc="${table.locationDescription}"
+                                        th:data-number="${table.tableNumber}"
+                                        th:data-capacity="${table.capacity}"
+                                        onclick="selectTable(this.getAttribute('data-id'), this.getAttribute('data-image'), this.getAttribute('data-desc'),
+                                        this.getAttribute('data-number'), this.getAttribute('data-capacity'))">
+                                    Chọn Bàn
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trường ẩn cho selectedTableId -->
+            <input type="hidden" id="selectedTableId" name="selectedTableId">
+            <input type="hidden" id="tableCapacity">
+
+            <!-- Hiển thị danh sách menu dưới dạng các button -->
+            <div class="mb-4">
+                <label class="form-label">Chọn món ăn:</label>
+                <div class="row">
+                    <div th:each="menuSetWithReview : ${menuSetWithReviews}" class="col custom-col mb-3">
+                        <div class="card">
+                            <!-- Tag Best Seller -->
+                            <div th:if="${menuSetWithReview.isBestSeller}" class="best-seller-badge text-white"
+                                 style="background-color: darkred">
+                                Best Try
+                            </div>
+                            <img th:src="@{/menusets/image/{id}(id=${menuSetWithReview.menuSet.id})}"
+                                 class="card-img-top" alt="Menu Image">
+                            <div class="card-body text-center">
+                                <h5 class="card-title" th:text="${menuSetWithReview.menuSet.name}"></h5>
+                                <p class="card-text">Giá: <span th:text="${menuSetWithReview.menuSet.price}"></span> VND</p>
+                                <div class="review-stars d-flex justify-content-center">
+                        <span th:each="i : ${#numbers.sequence(1, menuSetWithReview.rating)}"
+                              th:if="${menuSetWithReview.rating > 0}">&#9733;</span>
+                                    <span th:each="i : ${#numbers.sequence(menuSetWithReview.rating, 5)}"
+                                          th:if="${i > menuSetWithReview.rating}">&#9734;</span>
+                                    <span class="ms-1 text-secondary"
+                                          th:text="'(' + ${menuSetWithReview.countReview} + ')'"></span>
+                                </div>
+                                <button type="button" class="btn btn-primary select-button"
+                                        th:data-id="${menuSetWithReview.menuSet.id}"
+                                        th:data-name="${menuSetWithReview.menuSet.name}"
+                                        th:data-price="${menuSetWithReview.menuSet.price}"
+                                        th:data-image="${menuSetWithReview.menuSet.imageData}"
+                                        onclick="selectMenu(this.getAttribute('data-id'), this.getAttribute('data-name'), this.getAttribute('data-price'),
+                        this.getAttribute('data-image'))">
+                                    Chọn Món
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <h3 class="text-center">Hóa đơn thanh toán</h3>
+            <h4>Danh sách MenuSet</h4>
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-primary">
+                    <tr>
+                        <th>Tên</th>
+                        <th>Hình ảnh</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Tổng đơn giá</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listMenuSetSelect">
+
+                    </tbody>
+                </table>
+            </div>
+            <h4 class="mt-5">Danh sách bàn</h4>
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-primary">
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Mô tả</th>
+                        <th>Số bàn</th>
+                        <th>Sức chứa</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listTableSelect">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="my-5 d-flex" style="align-items: center">
+                <h4 class="me-3">Tổng tiền:</h4>
+                <h5 id="totalPrice" class="text-danger">0 VND</h5>
+            </div>
+
+            <button onclick="createOrder()" type="submit" class="btn btn-primary">Đặt bàn</button>
+
+
+        </div>
+    </div>
+
+    <!-- Toast message container -->
+    <div id="toast" class="toast show position-fixed bg-success text-white" role="alert" aria-live="assertive"
+         aria-atomic="true" style="top: 20px; right: 20px; z-index: 1050; display: none;">
+        <div class="toast-body">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+</div>
+
+<!-- Link đến Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Function to show toast message
+    function showToast(message) {
+    console.log("Toast Message: " + message); // Kiểm tra xem hàm có chạy hay không
+    var toast = document.getElementById("toast");
+    var toastMessage = document.getElementById("toastMessage");
+    toastMessage.innerText = message;
+    toast.style.display = "block";
+    setTimeout(function() {
+        toast.style.display = "none";
+    }, 3000);
+}
+
+    // Function when a table is selected
+    function selectTable(id, image, desc, number, capacity) {
+    showToast('Bạn đã chọn Bàn số ' + number);
+
+    let tableBody = document.getElementById("listTableSelect");
+    let existingRow = tableBody.querySelector(`tr[th\\:data-id='${id}']`);
+
+    if (!existingRow) {
+        let newRow = tableBody.insertRow();
+        newRow.setAttribute('th:data-id', id);
+        newRow.innerHTML = `
+            <td><img src="/tables/image/${id}" class="card-img-top" alt="Table Image" style="width: 50px; height: 50px; object-fit: cover" /></td>
+            <td>${desc}</td>
+            <td>${number}</td>
+            <td>${capacity}</td>
+            <td>
+                <button class="btn btn-outline-danger btn-sm" onclick="removeRowTable(this)">
+                    <i class="fas fa-trash" style="color: black;"></i>
+                </button>
+            </td>
+        `;
+    }
+}
+
+
+    let totalAmount = 0;
+    function selectMenu(menuId, menuName, menuPrice, image) {
+        console.log(`Menu selected: ${menuId}, Name: ${menuName}, Price: ${menuPrice}, Image: ${image}`); // Debug
+        showToast('Bạn đã chọn món ' + menuName);
+
+        let menuRow = document.querySelector(`#listMenuSetSelect tr[th\\:data-id='${menuId}']`);
+
+        if (menuRow) {
+            let quantityInput = menuRow.querySelector('input[type="number"]');
+            let currentQuantity = parseInt(quantityInput.value);
+            quantityInput.value = currentQuantity + 1;
+
+            let unitPrice = parseInt(menuPrice);
+            let totalPriceCell = menuRow.cells[4];
+            totalPriceCell.innerText = (unitPrice * (currentQuantity + 1)).toString();
+
+            totalAmount += unitPrice;
+            updateTotalPriceDisplay();
+        } else {
+            let tableBody = document.getElementById("listMenuSetSelect");
+
+            let newRow = tableBody.insertRow();
+
+            newRow.setAttribute('th:data-id', menuId);
+            newRow.innerHTML = `
+            <td>${menuName}</td>
+            <td><img src="/menusets/image/${menuId}" class="card-img-top" alt="Menuset Image" style="width: 50px; height: 50px; object-fit: cover" /></td>
+            <td><input class="form-control quantity-input" style="width: 100px" type="number" min="1" value="1" /></td>
+            <td>${menuPrice}</td>
+            <td>${menuPrice}</td>
+            <td>
+                <button class="btn btn-outline-danger btn-sm" onclick="removeRowMenu(this)">
+                    <i class="fas fa-trash" style="color: black;"></i>
+                </button>
+            </td>
+        `;
+
+            let quantityInput = newRow.querySelector('.quantity-input');
+            quantityInput.addEventListener('input', function() {
+                updateTotalPrice(newRow, menuPrice);
+            });
+            totalAmount += parseInt(menuPrice);
+            updateTotalPriceDisplay();
+        }
+    }
+
+    function updateTotalPrice(row, menuPrice) {
+        let quantityInput = row.querySelector('.quantity-input');
+        let quantity = parseInt(quantityInput.value);
+        let totalPriceCell = row.cells[4];
+        totalPriceCell.innerText = (parseInt(menuPrice) * quantity).toString();
+        totalAmount = 0;
+        let rows = document.querySelectorAll('#listMenuSetSelect tr');
+        rows.forEach(row => {
+            let rowTotal = row.cells[4].innerText || 0;
+            totalAmount += parseInt(rowTotal);
+        });
+
+        updateTotalPriceDisplay();
+    }
+    function updateTotalPriceDisplay() {
+        document.getElementById("totalPrice").innerText = totalAmount.toLocaleString() + " VND";
+    }
+
+
+    function removeRowMenu(button) {
+        let row = button.closest('tr');
+        let priceCell = row.cells[4];
+        let rowTotalPrice = parseInt(priceCell.innerText);
+
+        totalAmount -= rowTotalPrice;
+
+        row.remove();
+
+        updateTotalPriceDisplay();
+    }
+    function removeRowTable(button) {
+        button.closest('tr').remove();
+    }
+    function createOrder() {
+    const numberOfPeople = parseInt(document.getElementById('numberOfPeople').value);
+    const tableRows = document.querySelectorAll('#listTableSelect tr');
+
+    if (tableRows.length === 0) {
+        alert("Vui lòng chọn bàn.");
+        return;
+    }
+
+    // Lấy sức chứa tổng của các bàn đã chọn
+    let totalCapacity = 0;
+    tableRows.forEach(row => {
+        const capacity = parseInt(row.cells[3].innerText);
+        totalCapacity += capacity;
+    });
+
+    if (numberOfPeople > totalCapacity) {
+        alert("Số người vượt quá sức chứa của bàn đã chọn. Vui lòng chọn thêm bàn hoặc giảm số người.");
+        return;
+    }
+
+    const menuRows = document.querySelectorAll('#listMenuSetSelect tr');
+    if (menuRows.length === 0) {
+        alert("Vui lòng chọn món ăn.");
+        return;
+    }
+
+    const reservationTime = document.getElementById('reservationTime').value;
+    if (!reservationTime) {
+        alert("Vui lòng chọn thời gian đặt bàn.");
+        return;
+    }
+
+    // Thu thập dữ liệu đặt bàn
+    const tables = Array.from(tableRows).map(row => ({
+        id: parseInt(row.getAttribute('th:data-id')),
+    }));
+
+    const menuSets = Array.from(menuRows).map(row => ({
+        id: parseInt(row.getAttribute('th:data-id')),
+        quantity: parseInt(row.querySelector('.quantity-input').value),
+        price: parseInt(row.cells[3].innerText),
+    }));
+
+    const specialRequest = document.getElementById('specialRequest').value;
+
+    const requestData = {
+        reservationTime,
+        numberOfPeople,
+        specialRequest,
+        tables,
+        menuSets,
+    };
+
+    // Gửi dữ liệu đến backend
+    fetch('/reservations/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                window.location.href = `/reservations/create/success?id=${data}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Có lỗi xảy ra. Vui lòng thử lại!');
+        });
+}
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const reservationTimeInput = document.getElementById('reservationTime');
+
+        // Kiểm tra thời gian có nằm trong khoảng hợp lệ hay không
+        reservationTimeInput.addEventListener("input", function() {
+            const selectedDateTime = new Date(reservationTimeInput.value);
+            const selectedHour = selectedDateTime.getHours();
+            const selectedMinute = selectedDateTime.getMinutes();
+
+            // Giới hạn thời gian từ 17:00 đến 23:30
+            if (selectedHour < 17 || (selectedHour === 23 && selectedMinute > 30) || selectedHour > 23) {
+                alert("Thời gian chỉ được đặt từ 17:00 đến 23:30!");
+                reservationTimeInput.value = ""; // Reset giá trị nếu không hợp lệ
+            }
+            // Thời gian hợp lệ -> load các bàn trống trong khoảng thời gian đấy
+            else{
+                console.log(reservationTimeInput.value)
+                fetch(`/api/table?time=${reservationTimeInput.value}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        var html =``;
+                        data.map(item => {
+                            html += `<div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img src="/tables/image/${item.id}" class="card-img-top" alt="Table Image">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Bàn số: <span>${item.tableNumber}</span></h5>
+                                <!--                            <p class="card-text">Sức chứa: <span th:text="${item.capacity}"></span> người</p>-->
+                                <p class="card-text">Vị trí: <span>${item.locationDescription}</span></p>
+                                <button type="button" class="btn btn-primary select-button"
+                                        data-id="${item.id}"
+                                        data-image="${item.imageData}"
+                                        data-desc="${item.locationDescription}"
+                                        data-number="${item.tableNumber}"
+                                        data-capacity="${item.capacity}"
+                                        onclick="selectTable(this.getAttribute('data-id'), this.getAttribute('data-image'), this.getAttribute('data-desc'),
+                                        this.getAttribute('data-number'), this.getAttribute('data-capacity'))">
+                                    Chọn Bàn
+                                </button>
+                            </div>
+                        </div>
+                    </div>`
+                        })
+
+                        document.getElementById("tableList").innerHTML = html;
+                    })
+            }
+        });
+    });
+
+    //khong cho nguoi dung nhap ngay o qua khu
+    document.addEventListener("DOMContentLoaded", function () {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const minDateTime = `${year}-${month}-${date}T${hours}:${minutes}`;
+        const reservationInput = document.getElementById('reservationTime');
+        reservationInput.min = minDateTime;
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/wow/wow.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/counterup/counterup.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="lib/tempusdominus/js/moment.min.js"></script>
+<script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+<script th:src="@{/js/Payment.js}"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

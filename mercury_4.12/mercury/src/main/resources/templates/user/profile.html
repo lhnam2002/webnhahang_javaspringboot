@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${user.fullName}"></title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body style="background: #f6f7fc;">
+
+<!-- Header chung -->
+<th:block th:replace="~{layout :: header}"></th:block>
+
+<div class="container my-4">
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-8 col-md-10 col-xl-8">
+                <div class="card shadow decorative-border" style="border-radius: 1rem;">
+                    <div class="card-body p-5">
+                        <!-- Tiêu đề -->
+                        <h5 class="custom-profile-subheader">
+                            <p class="mb-4 text-secondary">Your profile information</p>
+                        </h5>
+
+                        <!-- Layout Hiển thị Thông tin -->
+                        <div class="custom-profile-container">
+                            <!-- Avatar Section -->
+                            <div class="custom-avatar-section">
+                                <!-- Avatar Image -->
+                                <img th:src="@{${user.avatarUrl}}" alt="Avatar" style="width: 120px; height: 120px; object-fit: cover;">
+                                <!-- Full Name -->
+                                <h5> <p> <strong>FullName:</strong> <span th:text="${user.fullName}"></span> </p> </h5>
+                            </div>
+
+                            <!-- Info Section -->
+                            <div class="custom-info-section">
+                                <!-- Hiển thị thông tin người dùng -->
+
+                                <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+                                <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                                <p><strong>Phone:</strong> <span th:text="${user.phone}"></span></p>
+                            </div>
+                            <!-- Button to edit profile -->
+                            <a href="/profile/edit" class="btn btn-primary">Edit Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer chung -->
+<th:block th:replace="~{layout :: footer}"></th:block>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/wow/wow.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/counterup/counterup.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="lib/tempusdominus/js/moment.min.js"></script>
+<script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+</body>
+</html>

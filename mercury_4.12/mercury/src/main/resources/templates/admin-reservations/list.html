@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+          rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet"/>
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary mt-2">Reservations</h2>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <form class="d-flex" th:action="@{/reservations/search}" method="get">
+            <input class="form-control form-control-sm me-2" type="search" placeholder="Search" name="keyword">
+            <button class="btn btn-outline-primary btn-sm" type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-primary">
+            <tr>
+                <th>Id</th>
+                <th>Number Of People</th>
+                <th>Pre Order Food</th>
+                <th>Reservation Time</th>
+                <th>Special Request</th>
+                <th>User</th>
+                <th>Check In Time</th>
+                <th>Check Out Time</th>
+                <th>Total Price</th>
+                <th>Late Fee</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reservation : ${reservations}">
+                <td th:text="${reservation.id}"></td>
+                <td th:text="${reservation.numberOfPeople}"></td>
+                <td th:text="${reservation.preOrderFood ? 'Yes' : 'No'}"></td>
+                <td th:text="${#temporals.format(reservation.reservationTime, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${reservation.specialRequest}"></td>
+                <td th:text="${reservation.user.fullName}"></td>
+                <td th:text="${#temporals.format(reservation.checkInTime, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${#temporals.format(reservation.checkOutTime, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${reservation.totalPrice != null ? (#numbers.formatInteger(reservation.totalPrice, 0, 'POINT') + ' VND') : ''}"></td>
+                <td th:text="${reservation.lateFee != null ? (#numbers.formatInteger(reservation.lateFee, 0, 'POINT') + ' VND') : ''}"></td>
+                <td th:text="${reservation.status}"></td>
+                <td>
+                    <button th:if="${reservation.status.toString() != 'CHECKED_OUT' && reservation.status.toString() != 'CANCELLED'}"
+                            th:data-status="${reservation.status}"
+                            th:data-id="${reservation.id}"
+                            onclick="handleClick(this.getAttribute('data-status'), this.getAttribute('data-id'))"
+                            data-bs-toggle="modal" data-bs-target="#myModal"
+                            class="btn btn-outline-primary btn-sm me-2 mb-1"><i class="fas fa-pencil-alt"
+                                                                                style="color: black;"></i>
+                    </button>
+                    <a th:href="@{/reservations/detail/{id}(id=${reservation.id})}"
+                       class="btn btn-outline-primary btn-sm me-2 mb-1"><i class="fas fa-eye" style="color: black;"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination justify-content-center mt-4">
+        <ul class="pagination">
+            <!-- Nút Previous -->
+            <li class="page-item mx-1" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/reservations(pageNo=${currentPage - 1}, pageSize=${pageSize})}">Previous</a>
+            </li>
+
+            <!-- Nút cho từng trang -->
+            <li class="page-item mx-1"
+                th:each="page : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${page == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/reservations(pageNo=${page}, pageSize=${pageSize})}" th:text="${page}">1</a>
+            </li>
+
+            <!-- Nút Next -->
+            <li class="page-item mx-1" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/reservations(pageNo=${currentPage + 1}, pageSize=${pageSize})}">Next</a>
+            </li>
+        </ul>
+    </div>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content card shadow decorative-border">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Update status</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/reservations/update-status" method="post">
+                        <div class="mb-3">
+                            <input hidden id="reservationId" value="" name="reservationId"/>
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select w-100 mb-3" id="status" name="status"
+                                    onchange="handleChange(this)">
+                                <option class="w-100" value="PENDING">PENDING</option>
+                                <option class="w-100" value="CHECKED_IN">CHECKED_IN</option>
+                                <option class="w-100" value="CHECKED_OUT">CHECKED_OUT</option>
+                                <option class="w-100" value="CANCELLED">CANCELLED</option>
+                            </select>
+                            <div id="latefee" style="display: none">
+                                <input type="checkbox" id="fee" name="fee" value="true"/>
+                                <label for="fee">Late fee</label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary ms-3">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{layout::footer}"></th:block>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script>
+        function handleClick(status, id){
+            document.getElementById("status").value = status;
+            document.getElementById("reservationId").value = id;
+            console.log(status);
+            console.log(id);
+        }
+        function handleChange(e) {
+            const lateFeeElement = document.getElementById("latefee");
+            if (e.value === 'CHECKED_IN') {
+                lateFeeElement.style.display = "block"; // Hiển thị phần tử
+            } else {
+                lateFeeElement.style.display = "none"; // Ẩn phần tử
+            }
+        }
+    </script>
+</body>
+</html>

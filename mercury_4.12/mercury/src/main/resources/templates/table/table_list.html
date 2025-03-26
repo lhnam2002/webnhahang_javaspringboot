@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dining Tables</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+          rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container-xxl position-relative p-0">
+    <!-- Hero Section -->
+    <div class="container-xxl py-5 bg-dark hero-header mb-5">
+        <div class="container text-center my-5 pt-5 pb-4">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Dining Tables</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Dining Tables</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="container my-4">
+    <div class="text-center mb-5">
+        <h5 class="section-title text-primary">Available Dining Tables</h5>
+        <h1 class="fw-bold">OUR TABLES</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4" th:each="table : ${diningTables}">
+            <div class="table-card shadow rounded">
+                <!-- Table Image -->
+                <div class="table-image">
+                    <img th:if="${table.imageData != null}" th:src="@{/tables/image/{id}(id=${table.id})}"
+                         class="img-fluid" alt="Table Image">
+                </div>
+                <!-- Table Details -->
+                <div class="table-info p-3">
+                    <h5 class="table-title text-uppercase text-center">
+                        <span th:text="'Number ' + ${table.tableNumber}">Number 1</span> -
+                        <span th:text="'Capacity: ' + ${table.capacity} + ' seat'">Capacity: 2 seat</span>
+                    </h5>
+                </div>
+                <!-- Table Description -->
+                <div class="table-description p-3">
+                    <p class="description-text" th:text="${table.locationDescription}">Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="pagination justify-content-center">
+        <ul class="pagination">
+            <li class="page-item mx-1" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/tables(pageNo=${currentPage - 1}, pageSize=${pageSize})}">Previous</a>
+            </li>
+            <li class="page-item mx-1" th:each="page : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${page == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/tables(pageNo=${page}, pageSize=${pageSize})}" th:text="${page}">1</a>
+            </li>
+            <li class="page-item mx-1" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/tables(pageNo=${currentPage + 1}, pageSize=${pageSize})}">Next</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<th:block th:replace="~{layout::footer}"></th:block>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

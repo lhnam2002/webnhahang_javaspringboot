@@ -1,0 +1,639 @@
+/********** Template CSS **********/
+:root {
+    --primary: #FEA116;
+    --light: #F1F8FF;
+    --dark: #0F172B;
+}
+
+.ff-secondary {
+    font-family: 'Pacifico', cursive;
+}
+
+.fw-medium {
+    font-weight: 600 !important;
+}
+
+.fw-semi-bold {
+    font-weight: 700 !important;
+}
+
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 45px;
+    bottom: 45px;
+    z-index: 99;
+}
+
+
+/*** Spinner ***/
+#spinner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    z-index: 99999;
+}
+
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/*** Button ***/
+.btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: .5s;
+}
+
+.btn.btn-primary,
+.btn.btn-secondary {
+    color: #FFFFFF;
+}
+
+.btn-square {
+    width: 38px;
+    height: 38px;
+}
+
+.btn-sm-square {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-lg-square {
+    width: 48px;
+    height: 48px;
+}
+
+.btn-square,
+.btn-sm-square,
+.btn-lg-square {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+    border-radius: 2px;
+}
+
+
+/*** Navbar ***/
+.navbar-dark .navbar-nav .nav-link {
+    position: relative;
+    margin-left: 25px;
+    padding: 35px 0;
+    font-size: 15px;
+    color: var(--light) !important;
+    text-transform: uppercase;
+    font-weight: 500;
+    outline: none;
+    transition: .5s;
+}
+
+.sticky-top.navbar-dark .navbar-nav .nav-link {
+    padding: 20px 0;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: var(--primary) !important;
+}
+
+.navbar-dark .navbar-brand img {
+    max-height: 60px;
+    transition: .5s;
+}
+
+.sticky-top.navbar-dark .navbar-brand img {
+    max-height: 45px;
+}
+
+@media (max-width: 991.98px) {
+    .sticky-top.navbar-dark {
+        position: relative;
+    }
+
+    .navbar-dark .navbar-collapse {
+        margin-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, .1)
+    }
+
+    .navbar-dark .navbar-nav .nav-link,
+    .sticky-top.navbar-dark .navbar-nav .nav-link {
+        padding: 10px 0;
+        margin-left: 0;
+    }
+
+    .navbar-dark .navbar-brand img {
+        max-height: 45px;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-dark {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background: #0F172B !important;
+    }
+}
+.sticky-top.navbar-dark {
+    position: fixed;
+    background: #0F172B !important;
+}
+
+
+/*** Hero Header ***/
+.hero-header {
+    background: linear-gradient(rgba(15, 23, 43, .9), rgba(15, 23, 43, .9)), url(../img/bg-hero.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hero-header img {
+    animation: imgRotate 50s linear infinite;
+}
+
+@keyframes imgRotate { 
+    100% { 
+        transform: rotate(360deg); 
+    } 
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, .5);
+}
+
+
+/*** Section Title ***/
+.section-title {
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::before {
+    position: absolute;
+    content: "";
+    width: 45px;
+    height: 2px;
+    top: 50%;
+    left: -55px;
+    margin-top: -1px;
+    background: var(--primary);
+}
+
+.section-title::after {
+    position: absolute;
+    content: "";
+    width: 45px;
+    height: 2px;
+    top: 50%;
+    right: -55px;
+    margin-top: -1px;
+    background: var(--primary);
+}
+
+.section-title.text-start::before,
+.section-title.text-end::after {
+    display: none;
+}
+
+
+
+.image-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+/*** Footer ***/
+.footer .btn.btn-social {
+    margin-right: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light);
+    border: 1px solid #FFFFFF;
+    border-radius: 35px;
+    transition: .3s;
+}
+
+.footer .btn.btn-social:hover {
+    color: var(--primary);
+}
+
+.footer .btn.btn-link {
+    display: block;
+    margin-bottom: 5px;
+    padding: 0;
+    text-align: left;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: normal;
+    text-transform: capitalize;
+    transition: .3s;
+}
+
+.footer .btn.btn-link::before {
+    position: relative;
+    content: "\f105";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+.footer .btn.btn-link:hover {
+    letter-spacing: 1px;
+    box-shadow: none;
+}
+
+.footer .copyright {
+    padding: 25px 0;
+    font-size: 15px;
+    border-top: 1px solid rgba(256, 256, 256, .1);
+}
+
+.footer .copyright a {
+    color: var(--light);
+}
+
+.footer .footer-menu a {
+    margin-right: 15px;
+    padding-right: 15px;
+    border-right: 1px solid rgba(255, 255, 255, .1);
+}
+
+.footer .footer-menu a:last-child {
+    margin-right: 0;
+    padding-right: 0;
+    border-right: none;
+}
+
+/* Tùy chỉnh nút Login và Logout */
+.navbar-nav .btn-primary {
+    color: #fff;
+     background-color: #000000;
+       border-color: #81abda;
+    transition: background-color 0.3s, color 0.3s;
+}
+.navbar-nav .btn-primary:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+}
+
+.navbar-nav .btn-primary .fas {
+    margin-right: 0.5em;
+}
+
+.text-white {
+    color: #ffffff !important;
+}
+
+.container.my-4 {
+  padding-top: 70px; /* Điều chỉnh giá trị này để thay đổi khoảng cách */
+}
+--------------------------13/11-----------------------
+------------------14/11--------------------
+/*form đăng nhập*/
+.decorative-border {
+    position: relative;
+    padding: 20px;
+    border: 2px solid #8b5e3c; /* Màu khung */
+    border-radius: 10px;
+    background-color: #f9e2b3;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.decorative-border::before,
+.decorative-border::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #8b5e3c;
+    border-radius: 10px;
+    top: 0;
+    left: 0;
+     pointer-events: none; /* Đảm bảo viền không chặn tương tác */
+    box-sizing: border-box;
+}
+
+.decorative-border::before {
+    border-style: dashed;
+}
+
+/* CSS cho hoa văn trang trí */
+.decorative-border:before,
+.decorative-border:after {
+    content: "❦"; /* Ký tự trang trí */
+    font-size: 24px;
+    color: #8b5e3c;
+     pointer-events: none; /* Đảm bảo hoa văn không chặn tương tác */
+    position: absolute;
+}
+
+.decorative-border:before {
+    top: -12px;
+    left: 10px;
+}
+
+.decorative-border:after {
+    bottom: -12px;
+    right: 10px;
+}
+ /*Form đăng kí*/
+.decorative-border {
+    position: relative;
+    padding: 20px;
+    border: 2px solid #8b5e3c; /* Màu khung */
+    border-radius: 10px;
+    background-color: #fff7e6;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.decorative-border::before,
+.decorative-border::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #8b5e3c;
+    border-radius: 10px;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+}
+
+.decorative-border::before {
+    border-style: dashed;
+}
+
+/* Hoa văn mới */
+.decorative-border:before,
+.decorative-border:after {
+    content: "✿"; /* Hoa văn khác */
+    font-size: 28px;
+    color: #8b5e3c;
+    position: absolute;
+}
+
+.decorative-border:before {
+    top: -14px;
+    left: 20px;
+}
+
+.decorative-border:after {
+    bottom: -14px;
+    right: 20px;
+}
+
+.decorative-border:hover {
+    transform: scale(1.02);
+}
+
+.btn-primary {
+    background-color: #58351e; /* Màu nền */
+    border: none;
+    color: #ffffff; /* Màu chữ trắng */
+}
+
+.btn-primary:hover {
+    background-color: #3e2716; /* Màu tối hơn khi hover */
+    transition: background-color 0.3s;
+}
+h3, .h3 {
+    font-size: xx-large;
+    font-family: 'Pacifico';
+}
+
+
+-------------------------------------------
+/* Menu*/
+.menu-card {
+    background-color: #1a1a1a;
+    color: #fff;
+    transition: transform 0.3s ease;
+    display: inline-block; /* Sử dụng inline-block để khung tự mở rộng theo ảnh */
+    width: 100%; /* Chiếm toàn bộ chiều rộng của cột chứa */
+    overflow: hidden; /* Giữ nội dung bên trong khung */
+}
+
+.menu-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.menu-image img {
+    width: auto; /* Để chiều rộng tự động */
+    max-height: 650px; /* Đặt chiều cao tối đa cho ảnh */
+    height: auto; /* Giữ tỉ lệ tự nhiên */
+    display: block;
+}
+
+.menu-content {
+    background-color: #1a1a1a;
+    text-align: center;
+    padding: 20px;
+    color: #fff;
+}
+
+.menu-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f0a500;
+}
+
+.menu-price {
+    font-size: 1.1rem;
+    color: #f0a500;
+    font-weight: bold;
+}
+--------------------
+/* custom-style.css */
+.custom-profile-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.custom-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px; /* Khoảng cách giữa avatar và thông tin */
+}
+
+.custom-info-section {
+    flex-grow: 1; /* Phần thông tin chiếm phần còn lại */
+}
+
+.custom-info-section .form-group {
+    margin-bottom: 20px;
+}
+
+.custom-fullname {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.custom-avatar-section img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.custom-profile-subheader {
+    text-align: center;
+    color: #6c757d;
+}
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-section {
+    text-align: center;
+    margin-right: 40px;
+}
+
+.avatar-section img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info-section {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+//------------------
+.nav-item .dropdown-menu {
+    background-color: #003366; /* Nền xanh đậm */
+    border: 1px solid #004080; /* Bo viền */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển đổi */
+    padding: 0; /* Xóa padding thừa */
+    margin: 0; /* Xóa margin thừa */
+}
+
+.nav-item .dropdown-menu .dropdown-item {
+    background-color: #0a0e2b; /* Nền mặc định */
+    color: white; /* Màu chữ trắng */
+    font-weight: bold; /* Chữ không in đậm */
+    padding: 10px 15px; /* Khoảng cách padding */
+    border: none; /* Xóa viền mặc định */
+    transition: all 0.3s ease; /* Hiệu ứng mượt */
+}
+
+.nav-item .dropdown-menu .dropdown-item:hover {
+    background-color: #004080; /* Nền xanh đậm hơn khi hover */
+    color: #ffffcc; /* Màu chữ vàng nhạt khi hover */
+    font-weight: bold; /* Chữ in đậm khi hover */
+    border-radius: 5px; /* Bo tròn viền */
+}
+//---------
+/* Container Styling */
+.container-xxl {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.table-card {
+  position: relative;
+  background-color: #fff;
+  border: 2px solid #ddd; /* Border for fallback */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 10%, 10% 0);
+}
+.table-content {
+    padding: 20px;
+    background-color: white;
+}
+
+.table-title {
+    font-size: 20px;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.table-capacity {
+    color: #555;
+}
+
+.table-location {
+    color: #777;
+}
+
+/* Optional: Adjusting layout */
+.table-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 4px solid #f2f2f2;
+}
+/* Table Description Styling */
+.table-description {
+    padding: 15px;
+    background-color: #fafafa; /* Light background for description area */
+}
+
+.description-text {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Pagination Styling */
+.pagination {
+    margin-top: 30px;
+}
+
+.page-item .page-link {
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.page-item .page-link:hover {
+    background-color: #f1f1f1;
+    color: #007bff;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 767px) {
+    .table-card {
+        margin-bottom: 20px;
+    }
+}
+
